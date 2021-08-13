@@ -22,6 +22,9 @@ def get_commune(region=None, departement=None, update=False,
         'france-zoom-paris', 
         'france-zoom-overseas-paris'] 
     
+    if (region is not None) | (departement is not None):
+        geo = 'france-all'
+    
     if geo not in list_geo:
         raise ValueError('!!! geo should be in : {} !!!'.format(' '.join(list_geo)))
     
@@ -147,7 +150,10 @@ def get_commune(region=None, departement=None, update=False,
                     communes = pd.concat([fm] + [paris])
                 elif geo == 'france-zoom-overseas':
                     communes = pd.concat(list_new_dep + [fm])
-        communes.to_pickle(link_file_geo)
+
+                if region is None:
+                    if departement is None:  
+                        communes.to_pickle(link_file_geo)
     else:
         try:
             communes = pd.read_pickle(link_file_geo)
@@ -159,7 +165,11 @@ def get_commune(region=None, departement=None, update=False,
                                    geo=geo,
                                    update=True)
 
-    
+    if region is not None:
+        communes = communes[communes['region_code'.isin(region)]]
+    if departement is not None:
+        communes = communes[communes['departement_code'.isin(departement)]]
+
     communes = communes.reset_index(drop=True)   
      
     return(communes)
