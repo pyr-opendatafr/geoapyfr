@@ -14,7 +14,11 @@ def _get_commune_from_departement(d, update, geometry):
     # create  folder
     if not os.path.exists(geoapyfr_folder):
         os.mkdir(geoapyfr_folder)
+    
     link_file = geoapyfr_folder + '/communes' + '_' + d
+    
+    if geometry is False:
+        link_file += '_centre'
     
     if (not os.path.exists(link_file)) | (update):
         
@@ -48,42 +52,45 @@ def _get_commune_from_departement(d, update, geometry):
             geom = data[c]['geometry']['coordinates']
             
             d = pd.DataFrame(com, index=[0])
-                        
-            # commune area is one plain polygon without hole
-            if len(geom) == 1:
-                g = Polygon(geom[0])
-                d['geometry'] = g
-            else:
-                # commune area splitted in several polygons
-                
-                if all([len(geom[i]) == 1 for i in range(len(geom))]):
-                    # commune area with several plain polygons without hole
-                   
-                    list_g = [[geom[i][0] for i in range(len(geom))]]
-                    d['geometry'] = shape({"type":"MultiPolygon",
-                                           "coordinates": list_g})
-                
+            
+            if geometry is True:            
+                # commune area is one plain polygon without hole
+                if len(geom) == 1:
+                    g = Polygon(geom[0])
+                    d['geometry'] = g
                 else:
-                    polygon_len_test = [len(geom[i]) == 1 for i in range(len(geom))]
-                    if any(polygon_len_test):
-                        # commune area with several polygons and some have holes inside
-                        # eg Bouloc-en-Quercy  j=80 c=20   
-                        list_polygon = []
-                        for i in range(len(geom)):
-                           if len(geom[i]) == 1:
-                               polygon = Polygon(geom[i][0])                         
-                           else:
-                               polygon = Polygon(geom[i][0], [geom[i][j] for j in range(1, len(geom[i]))])
-                           list_polygon.append(polygon)
-                        multi_poly = MultiPolygon(list_polygon)
-                        d['geometry'] = [multi_poly]
-                                             
+                    # commune area splitted in several polygons
+                    
+                    if all([len(geom[i]) == 1 for i in range(len(geom))]):
+                        # commune area with several plain polygons without hole
+                       
+                        list_g = [[geom[i][0] for i in range(len(geom))]]
+                        d['geometry'] = shape({"type":"MultiPolygon",
+                                               "coordinates": list_g})
+                    
                     else:
-                        # commune area in one polygon with holes inside
-                        # eg Beauvernois j=24 c=27
-                        g = Polygon(geom[0], [geom[i] for i in range(1, len(geom))])
-                        d['geometry'] = g
-                        
+                        polygon_len_test = [len(geom[i]) == 1 for i in range(len(geom))]
+                        if any(polygon_len_test):
+                            # commune area with several polygons and some have holes inside
+                            # eg Bouloc-en-Quercy  j=80 c=20   
+                            list_polygon = []
+                            for i in range(len(geom)):
+                               if len(geom[i]) == 1:
+                                   polygon = Polygon(geom[i][0])                         
+                               else:
+                                   polygon = Polygon(geom[i][0], [geom[i][j] for j in range(1, len(geom[i]))])
+                               list_polygon.append(polygon)
+                            multi_poly = MultiPolygon(list_polygon)
+                            d['geometry'] = [multi_poly]
+                                                 
+                        else:
+                            # commune area in one polygon with holes inside
+                            # eg Beauvernois j=24 c=27
+                            g = Polygon(geom[0], [geom[i] for i in range(1, len(geom))])
+                            d['geometry'] = g
+            else:
+                d['geometry'] = Polygon(geom)
+                            
             coms.append(d)
             
             communes = pd.concat(coms).reset_index(drop=True)
