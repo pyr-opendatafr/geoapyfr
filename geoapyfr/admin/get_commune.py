@@ -86,7 +86,7 @@ def get_commune(region=None, departement=None, update=False,
     if geo == 'france-metropolitan':
         communes = fm        
     
-    if geo not in ['france-all', 'france-metropolitan']:
+    if (geo not in ['france-all', 'france-metropolitan']) & (geometry is True):
         
         list_dept_available = communes['departement_code'].unique()
         

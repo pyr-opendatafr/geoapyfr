@@ -4,7 +4,7 @@ import appdirs
 import os
 import requests
 import pandas as pd
-from shapely.geometry import MultiPolygon, Polygon, shape
+from shapely.geometry import MultiPolygon, Polygon, shape, Point
 
 def _get_commune_from_departement(d, update, geometry):
     
@@ -90,7 +90,7 @@ def _get_commune_from_departement(d, update, geometry):
                             g = Polygon(geom[0], [geom[i] for i in range(1, len(geom))])
                             d['geometry'] = g
             else:
-                d['geometry'] = ', '.join([str(i) for i in geom])
+                d['geometry'] = Point(geom)
                             
             coms.append(d)
             
