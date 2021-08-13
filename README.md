@@ -4,7 +4,6 @@ Geoapyfr Package Overview
 **Work in progress**
 
 [![Build Status](https://github.com/hadrilec/geoapyfr/actions/workflows/master.yml/badge.svg)](https://github.com/hadrilec/geoapyfr/actions)
-
 [![Codecov test coverage](https://codecov.io/gh/hadrilec/geoapyfr/branch/master/graph/badge.svg)](https://codecov.io/gh/hadrilec/geoapyfr?branch=master)
 
 The geoapyfr package contains tools to easily download data from
@@ -30,7 +29,7 @@ Population Density By Commune
 
 ![image](https://raw.githubusercontent.com/hadrilec/geoapyfr/master/examples/population_density_by_commune.png)
 
-``` {.sourceCode .python}
+``` python
 
 from pandas.api.types import CategoricalDtype    
 import matplotlib.cm as cm
@@ -77,15 +76,8 @@ plt.show()
 How to avoid proxy issues ?
 ---------------------------
 
-``` {.sourceCode .python}
-# Use the proxy_server argument of the init_conn function to change the proxy server address   
-from pynsee.utils.init_conn import init_conn
-init_conn(insee_key="my_insee_key",
-          insee_secret="my_insee_secret",
-          proxy_server="http://my_proxy_server:port")
+``` python
 
-# Beware : any change to the keys should be tested after having cleared the cache
-# Please do : from pynsee.utils import *; clear_all_cache()
 ```
 
 Support
