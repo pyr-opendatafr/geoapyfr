@@ -35,7 +35,7 @@ def _get_commune_from_departement(d, update, geometry):
         
         coms = []
         
-        for c in data.keys(): 
+        for c in range(len(data)): 
                
             df = data[c]['properties']
             
