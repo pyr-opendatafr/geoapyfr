@@ -166,9 +166,9 @@ def get_commune(region=None, departement=None, update=False,
                                    update=True)
 
     if region is not None:
-        communes = communes[communes['region_code'.isin(region)]]
+        communes = communes[communes['region_code'].isin(region)]
     if departement is not None:
-        communes = communes[communes['departement_code'.isin(departement)]]
+        communes = communes[communes['departement_code'].isin(departement)]
 
     communes = communes.reset_index(drop=True)   
      
