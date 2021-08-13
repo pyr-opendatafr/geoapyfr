@@ -27,9 +27,9 @@ def get_departement(region=None, geometry=False, geo='france-zoom-overseas-paris
             surface = sum(df['surface'])
             df = df[list_col].drop_duplicates()
             new_poly = cascaded_union(polygons)
-            if len(new_poly) <= 1:
+            try:
                 df['geometry'] =  new_poly
-            else:
+            except:
                 df['geometry'] =  [new_poly]
             df['population'] = population
             df['surface'] = surface
