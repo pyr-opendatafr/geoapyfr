@@ -34,8 +34,8 @@ d['range'] = d['range'].astype(CategoricalDtype(categories=list_ranges, ordered=
 fig, ax = plt.subplots(1,1,figsize=[10,10])
 d.plot(column='range', cmap=cm.viridis,
     legend=True, ax=ax,
-    legend_kwds={'bbox_to_anchor': (1.1, 0.8),
+    legend_kwds={'bbox_to_anchor': (1.1, 0.9),
                  'title':'density per km2'})
 ax.set_axis_off()
-ax.set(title='Distribution of population in metropolitan France')
+ax.set(title='Distribution of population in France')
 plt.show()
