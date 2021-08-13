@@ -34,112 +34,132 @@ def get_commune(region=None, departement=None, update=False,
         
     link_file = geoapyfr_folder + '/communes'
     if geometry is False:
-        link_file += '_centre'    
+        link_file += '_centre'  
+
+    link_file_geo = link_file + '_' + geo
+
+    if ((not os.path.exists(link_file_geo)) | (update)):  
     
-    if ((not os.path.exists(link_file)) | (update)):
-        
-        reg = _get_region_list()
-        
-        reg_list = reg.region_code.to_list()
-        
-        if region is not None:
-            reg_list = [reg for reg in reg_list if reg in region]
-        
-        deps = _get_departement_list(region=reg_list)
-        
-        deps_list = deps.code.to_list()
-        
-        if departement is not None:
-            deps_list = [dep for dep in deps_list if dep in departement]
-         
-        coms = []
-        
-        for j in trange(len(deps_list)):
+        if ((not os.path.exists(link_file)) | (update)):
             
-            df = _get_commune_from_departement(d=deps_list[j],
-                                               update=update,
-                                               geometry=geometry)       
-                    
-            coms.append(df)
-        
-        communes = pd.concat(coms).reset_index(drop=True)
-        if region is None:
-            if departement is None:                
-                communes.to_pickle(link_file)
-    else:
-        try:
-            communes = pd.read_pickle(link_file)
-        except:
-            os.remove(link_file)
-            communes = get_commune(region=region,
-                                   departement=departement,
-                                   update=True)
+            reg = _get_region_list()
+            
+            reg_list = reg.region_code.to_list()
+            
+            if region is not None:
+                reg_list = [reg for reg in reg_list if reg in region]
+            
+            deps = _get_departement_list(region=reg_list)
+            
+            deps_list = deps.code.to_list()
+            
+            if departement is not None:
+                deps_list = [dep for dep in deps_list if dep in departement]
+            
+            coms = []
+            
+            for j in trange(len(deps_list)):
+                
+                df = _get_commune_from_departement(d=deps_list[j],
+                                                update=update,
+                                                geometry=geometry)       
+                        
+                coms.append(df)
+            
+            communes = pd.concat(coms).reset_index(drop=True)
+            if region is None:
+                if departement is None:                
+                    communes.to_pickle(link_file)
+        else:
+            try:
+                communes = pd.read_pickle(link_file)
+            except:
+                os.remove(link_file)
+                communes = get_commune(region=region,
+                                    departement=departement,
+                                    geometry=geometry,
+                                    geo=geo,
+                                    update=True)
             
     #
     # Translate and zoom on overseas departements and Paris
     #
-    communes['geometry'] = communes['geometry'].to_list()
-    list_ovdep = ['971', '972', '973', '974', '976']
-    fm = communes[~communes['departement_code'].isin(list_ovdep)]
-    fm = fm.reset_index(drop=True)
     
-    if geo == 'france-metropolitan':
-        communes = fm        
-    
-    if (geo not in ['france-all', 'france-metropolitan']) & (geometry is True):
-        
-        list_dept_available = communes['departement_code'].unique()
-        
-        if all([dpt in list_dept_available for dpt in list_ovdep + ['29']]):
-    
-            dep29 =  communes[communes['departement_code'].isin(['29'])]
-            dep29 = dep29.reset_index(drop=True)
-            minx = min(_extract_bounds(geom=dep29['geometry'], var='minx'))
-            miny = min(_extract_bounds(geom=dep29['geometry'], var='miny')) + 3
-            
-            list_new_dep = []         
-                
-            for d in range(len(list_ovdep)):
-                ovdep = communes[communes['departement_code'].isin([list_ovdep[d]])]
-                ovdep = ovdep.reset_index(drop=True)
-                if list_ovdep[d] == '973':
-                    # area divided by 4 for Guyane
-                    ovdep = _rescale_geom(df=ovdep, factor = 0.25)
-                
-                maxxdep = max(_extract_bounds(geom=ovdep['geometry'], var='maxx'))
-                maxydep = max(_extract_bounds(geom=ovdep['geometry'], var='maxy'))
-                xoff = minx - maxxdep - 2.5
-                yoff = miny - maxydep
-                ovdep['geometry'] = ovdep['geometry'].apply(lambda x: translate(x, xoff=xoff, yoff=yoff))
-                
-                
-                miny = min(_extract_bounds(geom=ovdep['geometry'], var='miny')) - 1.5
-                list_new_dep.append(ovdep)
-            
-            # PARIS
-            paris = communes[communes['departement_code'].isin(['75','92', '93','94'])]
-            paris = paris.reset_index(drop=True)
-            paris = _rescale_geom(df = paris, factor = 4)
-            
-            dep29 =  communes[communes['departement_code'].isin(['29'])]
-            dep29 = dep29.reset_index(drop=True)
-            minx = min(_extract_bounds(geom=dep29['geometry'], var= 'minx'))
-            miny = min(_extract_bounds(geom=dep29['geometry'], var= 'miny')) + 3
-            
-            maxxdep = max(_extract_bounds(geom=paris['geometry'], var= 'maxx'))
-            maxydep = max(_extract_bounds(geom=paris['geometry'], var= 'maxy'))
-            xoff = minx - maxxdep + 1
-            yoff = miny - maxydep - 5
-            paris['geometry'] = paris['geometry'].apply(lambda x: translate(x, xoff=xoff, yoff=yoff))
-              
-            
-            if geo == 'france-zoom-overseas-paris':        
-                communes = pd.concat(list_new_dep + [fm] + [paris])
-            elif geo == 'france-zoom-paris':
-                communes = pd.concat([fm] + [paris])
-            elif geo == 'france-zoom-overseas':
-                 communes = pd.concat(list_new_dep + [fm])
 
+        communes['geometry'] = communes['geometry'].to_list()
+        list_ovdep = ['971', '972', '973', '974', '976']
+        fm = communes[~communes['departement_code'].isin(list_ovdep)]
+        fm = fm.reset_index(drop=True)
+        
+        if geo == 'france-metropolitan':
+            communes = fm        
+        
+        if (geo not in ['france-all', 'france-metropolitan']) & (geometry is True):
+            
+            list_dept_available = communes['departement_code'].unique()
+            
+            if all([dpt in list_dept_available for dpt in list_ovdep + ['29']]):
+        
+                dep29 =  communes[communes['departement_code'].isin(['29'])]
+                dep29 = dep29.reset_index(drop=True)
+                minx = min(_extract_bounds(geom=dep29['geometry'], var='minx'))
+                miny = min(_extract_bounds(geom=dep29['geometry'], var='miny')) + 3
+                
+                list_new_dep = []         
+                    
+                for d in range(len(list_ovdep)):
+                    ovdep = communes[communes['departement_code'].isin([list_ovdep[d]])]
+                    ovdep = ovdep.reset_index(drop=True)
+                    if list_ovdep[d] == '973':
+                        # area divided by 4 for Guyane
+                        ovdep = _rescale_geom(df=ovdep, factor = 0.25)
+                    
+                    maxxdep = max(_extract_bounds(geom=ovdep['geometry'], var='maxx'))
+                    maxydep = max(_extract_bounds(geom=ovdep['geometry'], var='maxy'))
+                    xoff = minx - maxxdep - 2.5
+                    yoff = miny - maxydep
+                    ovdep['geometry'] = ovdep['geometry'].apply(lambda x: translate(x, xoff=xoff, yoff=yoff))
+                    
+                    
+                    miny = min(_extract_bounds(geom=ovdep['geometry'], var='miny')) - 1.5
+                    list_new_dep.append(ovdep)
+                
+                # PARIS
+                paris = communes[communes['departement_code'].isin(['75','92', '93','94'])]
+                paris = paris.reset_index(drop=True)
+                paris = _rescale_geom(df = paris, factor = 4)
+                
+                dep29 =  communes[communes['departement_code'].isin(['29'])]
+                dep29 = dep29.reset_index(drop=True)
+                minx = min(_extract_bounds(geom=dep29['geometry'], var= 'minx'))
+                miny = min(_extract_bounds(geom=dep29['geometry'], var= 'miny')) + 3
+                
+                maxxdep = max(_extract_bounds(geom=paris['geometry'], var= 'maxx'))
+                maxydep = max(_extract_bounds(geom=paris['geometry'], var= 'maxy'))
+                xoff = minx - maxxdep + 1
+                yoff = miny - maxydep - 5
+                paris['geometry'] = paris['geometry'].apply(lambda x: translate(x, xoff=xoff, yoff=yoff))
+                
+                
+                if geo == 'france-zoom-overseas-paris':        
+                    communes = pd.concat(list_new_dep + [fm] + [paris])
+                elif geo == 'france-zoom-paris':
+                    communes = pd.concat([fm] + [paris])
+                elif geo == 'france-zoom-overseas':
+                    communes = pd.concat(list_new_dep + [fm])
+        communes.to_pickle(link_file_geo)
+    else:
+        try:
+            communes = pd.read_pickle(link_file_geo)
+        except:
+            os.remove(link_file_geo)
+            communes = get_commune(region=region,
+                                   departement=departement,
+                                   geometry=geometry,
+                                   geo=geo,
+                                   update=True)
+
+    
     communes = communes.reset_index(drop=True)   
      
     return(communes)
