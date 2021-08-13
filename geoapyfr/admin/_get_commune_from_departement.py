@@ -90,7 +90,7 @@ def _get_commune_from_departement(d, update, geometry):
                             g = Polygon(geom[0], [geom[i] for i in range(1, len(geom))])
                             d['geometry'] = g
             else:
-                d['geometry'] = Polygon(geom)
+                d['geometry'] = ', '.join([str(i) for i in geom])
                             
             coms.append(d)
             
