@@ -6,10 +6,12 @@ import geopandas as gpd
 import sys
 
 from geoapyfr.admin.get_commune import get_commune
+from geoapyfr.admin.get_departement import get_departement
+from geoapyfr.admin.get_region import get_region
 
 class TestFunction(TestCase):
 
-    def test_get_commune(self):
+    def test_all(self):
 
         list_geo = [ 
         'france-all',
@@ -21,11 +23,16 @@ class TestFunction(TestCase):
         test = True
 
         for geo in list_geo:
-            df = get_commune(geometry=True, geo=geo)
-            test = test & isinstance(df, pd.DataFrame)
+            for bool in [True, False]:             
+                df = get_commune(geometry=bool, geo=geo)
+                test = test & isinstance(df, pd.DataFrame)
+                df = get_region(geometry=bool, geo=geo)
+                test = test & isinstance(df, pd.DataFrame)
+                df = get_departement(geometry=bool, geo=geo)
+                test = test & isinstance(df, pd.DataFrame)
         
         df = get_commune(geometry=True, geo='france-zoom-overseas-paris')
-        df = test & isinstance(df)
+        df = test & isinstance(df, pd.DataFrame)
 
         self.assertTrue(test)
 
