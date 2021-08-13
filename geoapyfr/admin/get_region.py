@@ -33,8 +33,12 @@ def get_region(geometry=False, geo='france-zoom-overseas'):
         for r in reg_list:
             df = communes[communes['region_code'] == r]
             polygons = df['geometry'].to_list()
+            population = sum(df['population'])
+            surface = sum(df['surface'])
             df = df[list_col].drop_duplicates()
             df['geometry'] =  [cascaded_union(polygons)]
+            df['population'] = population
+            df['surface'] = surface
             list_reg_with_geom.append(df)
         
         reg = pd.concat(list_reg_with_geom)   

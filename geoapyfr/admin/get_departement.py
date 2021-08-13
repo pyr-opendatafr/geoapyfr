@@ -3,8 +3,8 @@
 import pandas as pd
 from shapely.ops import cascaded_union
 
-from .get_commune import get_commune
-from ._get_departement_list import _get_departement_list
+from geoapyfr.admin.get_commune import get_commune
+from geoapyfr.admin._get_departement_list import _get_departement_list
 
 def get_departement(region=None, geometry=False, geo='france-zoom-overseas-paris'):
     
@@ -23,8 +23,12 @@ def get_departement(region=None, geometry=False, geo='france-zoom-overseas-paris
         for d in dep_list:
             df = communes[communes['departement_code'] == d]
             polygons = df['geometry'].to_list()
+            population = sum(df['population'])
+            surface = sum(df['surface'])
             df = df[list_col].drop_duplicates()
             df['geometry'] =  [cascaded_union(polygons)]
+            df['population'] = population
+            df['surface'] = surface
             list_dep_with_geom.append(df)
         
         deps = pd.concat(list_dep_with_geom)   
