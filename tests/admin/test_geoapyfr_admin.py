@@ -26,8 +26,10 @@ class TestFunction(TestCase):
             for bool in [True, False]:             
                 df = get_commune(geometry=bool, geo=geo)
                 test = test & isinstance(df, pd.DataFrame)
+
                 df = get_region(geometry=bool, geo=geo)
                 test = test & isinstance(df, pd.DataFrame)
+                
                 df = get_departement(geometry=bool, geo=geo)
                 test = test & isinstance(df, pd.DataFrame)
         

@@ -13,7 +13,7 @@ def _get_departement_list(region=None):
     
     if region is None:
         reg = _get_region_list()    
-        region = reg.code.to_list()
+        region = reg.region_code.to_list()
     
     for r in region:
         results = requests.get(apigeo_link + 'regions/{}/departements'.format(r))

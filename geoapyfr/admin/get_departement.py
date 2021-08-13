@@ -24,7 +24,7 @@ def get_departement(region=None, geometry=False, geo='france-zoom-overseas-paris
             df = communes[communes['departement_code'] == d]
             polygons = df['geometry'].to_list()
             df = df[list_col].drop_duplicates()
-            df['geometry'] =  cascaded_union(polygons)
+            df['geometry'] =  [cascaded_union(polygons)]
             list_dep_with_geom.append(df)
         
         deps = pd.concat(list_dep_with_geom)   
