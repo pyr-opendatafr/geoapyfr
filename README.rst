@@ -37,7 +37,7 @@ Installation
 Population Density By Commune
 -----------------------------
 
-.. image:: https://raw.githubusercontent.com/InseeFrLab/Py-Insee-Data/master/docs/examples/pictures/example_gdp_picture.png?token=AP32AXOVNXK5LWKM4OJ5THDAZRHZK
+.. image:: https://raw.githubusercontent.com/hadrilec/geoapyfr/master/examples/population_density_by_commune.png
 
 .. literalinclude:: population_density_by_commune.py
    

@@ -8,7 +8,7 @@ import geopandas as gpd
 
 from geoapyfr.admin.get_commune import get_commune  
 
-communes = get_commune()                     
+communes = get_commune(geometry=True)                     
                                       
 d = gpd.GeoDataFrame(communes, geometry='geometry')
 d['density'] = 100 * d['population'] / d['surface']
@@ -16,7 +16,7 @@ d['density'] = 100 * d['population'] / d['surface']
 d.loc[d.density < 40, 'range'] = "< 40"
 d.loc[d.density >= 20000, 'range'] = "> 20 000"
 
-density_ranges = [40, 50, 70, 100, 120, 160, 200, 240, 260, 410, 600, 1000, 5000, 20000]
+density_ranges = [40, 100, 120, 160, 200, 240, 260, 410, 600, 1000, 5000, 20000]
 list_ranges = []
 list_ranges.append( "< 40")
 
