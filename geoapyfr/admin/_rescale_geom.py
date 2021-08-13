@@ -1,16 +1,21 @@
 # -*- coding: utf-8 -*-
 
 from shapely.affinity import scale
+from geoapyfr.admin._extract_bounds import _extract_bounds
 
 def _rescale_geom(df, factor):
-    df_bounds = df['geometry'].bounds
-    maxxdf = df_bounds.maxx.max()
-    minxdf = df_bounds.minx.min()
-    maxydf = df_bounds.maxy.max()
-    minydf = df_bounds.miny.min()
+    maxxdf = max(_extract_bounds(geom=df['geometry'], var='maxx'))
+    minxdf = min(_extract_bounds(geom=df['geometry'], var='minx'))
+    maxydf = max(_extract_bounds(geom=df['geometry'], var='maxy'))
+    minydf = min(_extract_bounds(geom=df['geometry'], var='miny'))
     center = ((maxxdf + minxdf) / 2, (maxydf + minydf) / 2)
-    df['geometry'] =  df['geometry'].scale(xfact=factor,
-                                           yfact=factor,
-                                           zfact=1.0, origin=center)
+    
+    for i in range(len(df['geometry'])):
+        df.loc[i,'geometry'] =  scale(
+            geom =  df.loc[i, 'geometry'],
+            xfact=factor,
+            yfact=factor,
+            zfact=1.0,
+            origin=center)
     
     return(df) 
