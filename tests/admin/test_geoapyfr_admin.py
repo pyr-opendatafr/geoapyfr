@@ -23,6 +23,9 @@ class TestFunction(TestCase):
         for geo in list_geo:
             df = get_commune(geometry=True, geo=geo)
             test = test & isinstance(df, pd.DataFrame)
+        
+        df = get_commune(geometry=True, geo='france-zoom-overseas-paris')
+        df = test & isinstance(df)
 
         self.assertTrue(test)
 
