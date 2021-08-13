@@ -27,14 +27,22 @@ class TestFunction(TestCase):
                 df = get_commune(geometry=bool, geo=geo)
                 test = test & isinstance(df, pd.DataFrame)
 
-                df = get_region(geometry=bool, geo=geo)
-                test = test & isinstance(df, pd.DataFrame)
-                
                 df = get_departement(geometry=bool, geo=geo)
                 test = test & isinstance(df, pd.DataFrame)
         
         df = get_commune(geometry=True, geo='france-zoom-overseas-paris')
         df = test & isinstance(df, pd.DataFrame)
+
+        list_geo = [ 
+        'france-all',
+        'france-metropolitan', 
+        'france-zoom-overseas'] 
+
+        for geo in list_geo:
+            for bool in [True, False]:             
+
+                df = get_region(geometry=bool, geo=geo)
+                test = test & isinstance(df, pd.DataFrame)        
 
         self.assertTrue(test)
 
