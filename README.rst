@@ -6,17 +6,13 @@ Geoapyfr Package Overview
 
 **Work in progress**
 
-.. image:: https://github.com/InseeFrLab/Py-Insee-Data/actions/workflows/master.yml/badge.svg
-   :target: https://github.com/InseeFrLab/Py-Insee-Data/actions
+.. image:: https://github.com/hadrilec/geoapyfr/actions/workflows/master.yml/badge.svg
+   :target: https://github.com/hadrilec/geoapyfr/actions
    :alt: Build Status
 
-.. image:: https://codecov.io/gh/InseeFrLab/Py-Insee-Data/branch/master/graph/badge.svg?token=TO96FMWRHK
-   :target: https://codecov.io/gh/InseeFrLab/Py-Insee-Data?branch=master
+.. image:: https://codecov.io/gh/hadrilec/geoapyfr/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/hadrilec/geoapyfr?branch=master
    :alt: Codecov test coverage
-
-.. image:: https://readthedocs.org/projects/pynsee/badge/?version=latest
-   :target: https://pynsee.readthedocs.io/en/latest/?badge=latest
-   :alt: Documentation Status
 
 The geoapyfr package contains tools to easily download data from geo.api.gouv.fr API.
 Geoapyfr gives a quick access to a list of French administrative areas, with their geographic limits, population and surface area. 
@@ -39,8 +35,8 @@ Population Density By Commune
 
 .. image:: https://raw.githubusercontent.com/hadrilec/geoapyfr/master/examples/population_density_by_commune.png
 
-.. literalinclude:: population_density_by_commune.py
-   
+.. literalinclude:: examples/population_density_by_commune.py
+   :language: python
 
 How to avoid proxy issues ?
 ---------------------------
@@ -59,7 +55,7 @@ How to avoid proxy issues ?
 Support
 -------
 
-Feel free to open an issue with any question about this package using <https://github.com/hadrilec/Geoapyfr/issues> Github repository.
+Feel free to open an issue with any question about this package using <https://github.com/hadrilec/geoapyfr/issues> Github repository.
 
 Contributing
 ------------
