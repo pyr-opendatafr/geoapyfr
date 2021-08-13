@@ -34,9 +34,9 @@ def get_commune(region=None, departement=None, update=False,
         
     link_file = geoapyfr_folder + '/communes'
     if geometry is False:
-        link_file += '_centre'
+        link_file += '_centre'    
     
-    if (not os.path.exists(link_file)) | (update):
+    if ((not os.path.exists(link_file)) | (update)):
         
         reg = _get_region_list()
         

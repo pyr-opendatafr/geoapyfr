@@ -18,7 +18,7 @@ def _get_commune_from_departement(d, update, geometry):
     link_file = geoapyfr_folder + '/communes' + '_' + d
     
     if geometry is False:
-        link_file += '_centre'
+        link_file += '_centre'    
     
     if (not os.path.exists(link_file)) | (update):
         
@@ -29,12 +29,13 @@ def _get_commune_from_departement(d, update, geometry):
             req_fields += '&geometry=contour'
         
         link = apigeo_link + 'departements/{}/communes'.format(d) + req_fields
+        
         results = requests.get(link)
         data = results.json()['features']
         
         coms = []
         
-        for c in range(len(data)): 
+        for c in data.keys(): 
                
             df = data[c]['properties']
             
@@ -93,8 +94,9 @@ def _get_commune_from_departement(d, update, geometry):
                             
             coms.append(d)
             
-            communes = pd.concat(coms).reset_index(drop=True)
-            communes.to_pickle(link_file)
+        communes = pd.concat(coms).reset_index(drop=True)
+         
+        communes.to_pickle(link_file)         
             
     else:
         
