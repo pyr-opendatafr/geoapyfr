@@ -1,8 +1,6 @@
 Geoapyfr Package Overview
 =========================
 
-**Work in progress**
-
 [![Build Status](https://github.com/hadrilec/geoapyfr/actions/workflows/master.yml/badge.svg)](https://github.com/hadrilec/geoapyfr/actions)
 [![Codecov test coverage](https://codecov.io/gh/hadrilec/geoapyfr/branch/master/graph/badge.svg)](https://codecov.io/gh/hadrilec/geoapyfr?branch=master)
 
