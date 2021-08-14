@@ -33,7 +33,7 @@ class TestFunction(TestCase):
         df = get_commune(geometry=True, geo='france-zoom-overseas-paris')
         test = test & isinstance(df, pd.DataFrame)
 
-        df = get_commune(region = ['11'], departement=['91'], geometry=True, geo='france-all')
+        df = get_commune(region = ['93'], departement=['84'], geometry=True, geo='france-all')
         test = test & isinstance(df, pd.DataFrame)
 
         df = get_departement(region = ['11'], departement=['91'], geometry=True, geo='france-all')

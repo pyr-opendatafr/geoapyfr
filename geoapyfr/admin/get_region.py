@@ -9,6 +9,21 @@ from geoapyfr.admin.get_commune import get_commune
 
 @lru_cache(maxsize=None)
 def get_region(geometry=False, geo='france-zoom-overseas'):
+    """Get a list of regions
+
+    Args:
+        geometry (bool, optional): If True it provides geographic limits, if False only the center point is rendred. Defaults to False.
+        geo (str, optional): To better display French territory, by default several geographic locations are modified.
+         Overseas territory are artificial located close to French shores and a zoom on parisian departements is rendered.
+         Available options are:
+         geo='france-all' (geographic limits are provided as is)
+         geo='france-metropolitan' (overseas departements are excluded)
+         geo='france-zoom-paris' (overseas departements are excluded and a zoom on Paris is rendered)
+         geo='france-zoom-overseas' (overseas departements are included in a zoom)
+         geo='france-zoom-overseas-paris' (the zoom includes overseas departements and Paris)
+         Defaults to 'france-zoom-overseas-paris'.
+
+    """    
     
     list_geo = [ 
         'france-all',
