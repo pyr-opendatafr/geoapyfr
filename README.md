@@ -35,7 +35,7 @@ from geoapyfr.admin import get_commune, get_departement, get_region
 
 reg = get_region()
 
-dep = get_departement(region = ['93'], departement = ['84'], geometry = True)
+dep = get_departement(region = ['93'], geometry = True)
 
 commune = get_commune(departement = ['84'], geometry=True)
 
