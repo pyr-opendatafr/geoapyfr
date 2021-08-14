@@ -31,7 +31,14 @@ class TestFunction(TestCase):
                 test = test & isinstance(df, pd.DataFrame)
         
         df = get_commune(geometry=True, geo='france-zoom-overseas-paris')
-        df = test & isinstance(df, pd.DataFrame)
+        test = test & isinstance(df, pd.DataFrame)
+
+        df = get_commune(region = ['11'], departement=['91'], geometry=True, geo='france-all')
+        test = test & isinstance(df, pd.DataFrame)
+
+        df = get_departement(region = ['11'], departement=['91'], geometry=True, geo='france-all')
+        test = test & isinstance(df, pd.DataFrame)
+        test = test & (len(df) == 1)
 
         list_geo = [ 
         'france-all',
