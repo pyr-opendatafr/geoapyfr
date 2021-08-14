@@ -17,11 +17,30 @@ developments made by DINUM's teams working on APIs.
 Installation
 ------------
 
-``` {.sourceCode .python}
+```
 # Get the development version from GitHub
 # git clone https://github.com/hadrilec/geoapyfr.git
 # cd geoapyfr
 # pip install .
+```
+
+Data Search and Collection Advice
+---------------------------------
+To get all communes from one or several departements/regions, please do the following:
+* First, use ```get_region``` to have a full list of French regions and their identifier code
+* Then, use ```get_departement``` to get the list of departements in one or several regions
+* Finally, use ```get_commune``` to get the communes
+* NB : ```geometry=True``` will give the geographic limits of each commune, departement or region
+
+``` python 
+from geoapyfr.admin import get_commune, get_departement, get_region
+
+reg = get_region()
+
+dep = get_departement(region = ['93'], departement = ['84'], geometry = True)
+
+commune = get_commune(departement = ['84'], geometry=True)
+
 ```
 
 Population Density By Commune
